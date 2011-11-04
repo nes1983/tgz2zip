@@ -1,1 +1,3 @@
 Copy tgz2zip into a directory that's in your path.
+
+If you're installing on osx, there's a brew formula in tgz2zip.rb.
