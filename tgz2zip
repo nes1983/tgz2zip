@@ -1,44 +1,60 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Fail if return code isn't 0. 
 # Parameter 1 is the return code
 # Para. 2 is text to display on failure.
-check_errs()
-{
+check_errs() {
   if [ "${1}" -ne "0" ]; then
     echo "ERROR # ${1} : ${2}"
     exit ${1}
   fi
 }
 
-infile="$1"
-outfile="$2"
-where_am_I=$PWD
-tempdir="$(mktemp -d -t 2zip)"
-echo $tempdir
-trap "rm -rf '$TMPDIR'" EXIT INT HUP TERM
+normalize() {
+	dir=$1
+	dir=`dirname $dir`
+	dir=`cd "${dir}";pwd`
+	fname=`basename $1`
+	echo "$dir/$fname"
+}
 
-case "$infile" in
-    *.tar.gz | *.tgz)
-        tar -C "$tempdir" -xzf "$infile" 2>/dev/null
-		check_errs $?
-        ;;
-    *.tar)
-        tar -C "$tempdir" -xf "$infile" 2>/dev/null
-		check_errs $?
+for infile in "$@"
+do
+    unpackdir="$(mktemp -d -t 2zip)"
+	trap "rm -rf '$unpackdir'" EXIT INT HUP TERM
 
-        ;;
-    *.tar.bzip2)
-        tar -C "$tempdir" -xjf "$infile" 2>/dev/null
-		check_errs $?
-        ;;
-    *)
-        echo "Unrecognized input format" >&2
-        exit -1
-        ;;
-esac
-
-(cd "$tempdir" && zip -r "${where_am_I}/$outfile" .)
-check_errs $?
-rm $infile
-check_errs $?
+	case "$infile" in
+	     *.tgz)
+	        tar -C "$unpackdir" -xzf "$infile" >/dev/null
+			check_errs $?
+			outfile=${infile%.tgz}  
+	        ;;
+		*.tar.gz)
+			tar -C "$unpackdir" -xzf "$infile" >/dev/null
+			check_errs $?
+			outfile= ${infile:%.tar.gz}
+			;;
+	    *.tar)
+	        tar -C "$unpackdir" -xf "$infile" >/dev/null
+			check_errs $?
+			outfile=${infile:.tar}
+	        ;;
+	    *.tar.bzip2)
+	        tar -C "$unpackdir" -xjf "$infile" >/dev/null 
+			check_errs $?
+			outfile= ${infile:.tar.bzip2}
+	        ;;
+	    *)
+	        echo "Unrecognized input format" >&2
+	        exit -1
+	        ;;
+	esac
+	outfile=`normalize $outfile`
+	outfile="${outfile}.zip"
+	outdir=`dirname $outfile`
+	(cd "$unpackdir" && zip -r "$outfile" . > /dev/null)
+	check_errs $?
+	rm $infile
+	check_errs $?
+	rm -rf "$unpackdir"
+done
