@@ -7,7 +7,6 @@ check_errs()
 {
   if [ "${1}" -ne "0" ]; then
     echo "ERROR # ${1} : ${2}"
-    # as a bonus, make our script exit with the right error code.
     exit ${1}
   fi
 }
@@ -15,10 +14,9 @@ check_errs()
 infile="$1"
 outfile="$2"
 where_am_I=$PWD
-# Add syntax checking here
 tempdir="$(mktemp -d -t 2zip)"
 echo $tempdir
-#trap "rm -rf '$TMPDIR'" EXIT INT HUP TERM
+trap "rm -rf '$TMPDIR'" EXIT INT HUP TERM
 
 case "$infile" in
     *.tar.gz | *.tgz)
