@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Fail if return code isn't 0. 
 # Parameter 1 is the return code
