@@ -1,8 +1,0 @@
-Convert various archive formats into zip.
-
-#USAGE EXAMPLE
-
-	tgz2zip diary.tgz diary.zip
-
-#Contact
-You can contact me under <mailto:niko.schwarz@googlemail.com>

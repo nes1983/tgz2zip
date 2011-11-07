@@ -1,4 +1,5 @@
 tgz2zip(1) -- Convert tgz or other tar-archives to zip archives.
+================================================================
 
 ## SYNOPSIS
 
@@ -8,6 +9,9 @@ tgz2zip(1) -- Convert tgz or other tar-archives to zip archives.
 
 Convert `tgz` or other tar(1)-archives to zip archives. The zip(1) archive format allows for individual 
 files to be extracted without decompressing the entire file. This command converts all passed in files.
+
+## EXAMPLE
+	$ tgz2zip middleearth.tgz wonderland.tar.bzip2
 
 ## AUTHOR
 [Niko Schwarz](mailto:niko.schwarz@googlemail.com)
