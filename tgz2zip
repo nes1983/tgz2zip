@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Fail if return code isn't 0. 
 # Parameter 1 is the return code
@@ -11,81 +11,81 @@ check_errs() {
 }
 
 normalize() {
-	dir=$1
-	dir=`dirname $dir`
-	pushd $dir > /dev/null
-	dir=`pwd`
-	popd > /dev/null 2&>1
-	fname=`basename $1`	
-	echo "$dir/$fname"
+    dir=$1
+    dir=`dirname $dir`
+    pushd $dir > /dev/null
+    dir=`pwd`
+    popd > /dev/null 2&>1
+    fname=`basename $1`    
+    echo "$dir/$fname"
 }
 
 #Show help and quit.
 myhelp() {
-	echo "tgz2zip wonderland.tgz [middle-earth.tar.bzip2]" >&2
+    echo "USAGE: tgz2zip wonderland.tgz [middle-earth.tar.bzip2]" >&2
     exit 0
 }
 
 while getopts :h OPTION
 do
-         case $OPTION in
-          h) myhelp
-             ;;
-          \?) echo "Illegal option -- $OPTARG" >&2
-             exit -1
+    case $OPTION in
+        h) myhelp
             ;;
-         esac
+        \?) echo "Illegal option -- $OPTARG" >&2
+            exit -1
+            ;;
+    esac
 done
 
 if [ "$1" == "" ]
 then
-	myhelp
+    myhelp
 fi
 
 for infile in "$@"
 do
     unpackdir="$(mktemp -d -t 2zip)"
-	trap "rm -rf '$unpackdir'" EXIT INT HUP TERM
+    trap "rm -rf '$unpackdir'" EXIT INT HUP TERM
 
-	case "$infile" in
-	     *.tgz)
-	        tar -C "$unpackdir" -xzf "$infile" >/dev/null
-			check_errs $?
-			outfile=${infile%.tgz}  
-	        ;;
-		*.tar.gz)
-			tar -C "$unpackdir" -xzf "$infile" >/dev/null
-			check_errs $?
-			outfile=${infile%.tar.gz}
-			;;
-	    *.tar)
-	        tar -C "$unpackdir" -xf "$infile" >/dev/null
-			check_errs $?
-			outfile=${infile%.tar}
-	        ;;
-	    *.tar.bzip2)
-	        tar -C "$unpackdir" -xjf "$infile" >/dev/null 
-			check_errs $?
-			outfile=${infile%.tar.bzip2}
-	        ;;
-	    *)
-	        echo "Unrecognized input format" >&2
-	        exit -1
-	        ;;
-	esac
-	outfile=`normalize $outfile`
-	
-	outfile="${outfile}.zip"
+    case "$infile" in
+         *.tgz)
+            tar -C "$unpackdir" -xzf "$infile" >/dev/null
+            check_errs $?
+            outfile=${infile%.tgz}  
+            ;;
+        *.tar.gz)
+            tar -C "$unpackdir" -xzf "$infile" >/dev/null
+            check_errs $?
+            outfile=${infile%.tar.gz}
+            ;;
+        *.tar)
+            tar -C "$unpackdir" -xf "$infile" >/dev/null
+            check_errs $?
+            outfile=${infile%.tar}
+            ;;
+        *.tar.bzip2)
+            tar -C "$unpackdir" -xjf "$infile" >/dev/null 
+            check_errs $?
+            outfile=${infile%.tar.bzip2}
+            ;;
+        *)
+            echo "Unrecognized input format" >&2
+            exit -1
+            ;;
+    esac
+    outfile=`normalize $outfile`
+    
+    outfile="${outfile}.zip"
 
-	if [ -e $outfile ] ; then
-		echo "Overwriting $outfile" >&2
-	fi
-	
-	pushd "$unpackdir" > /dev/null
-	zip -r "$outfile" . > /dev/null
-	check_errs $?
-	popd > /dev/null
-	rm $infile
-	check_errs $?
-	rm -rf "$unpackdir"
+    if [ -e $outfile ] ; then
+        echo "Overwriting $outfile" >&2
+    fi
+    
+    pushd "$unpackdir" > /dev/null
+    zip -r "$outfile" . > /dev/null
+    check_errs $?
+    popd > /dev/null
+    rm $infile
+    check_errs $?
+    rm -rf "$unpackdir"
 done
