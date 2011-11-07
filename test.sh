@@ -14,7 +14,7 @@ cd ..
 
 tar -cjf test.tar.bzip2 test
 
-sh ./tgz2zip test.tar.bzip2
+tgz2zip test.tar.bzip2
 
 out=`unzip -l test.zip` 
 if [ "8" == `echo "$out" | wc -l` ] ; then
