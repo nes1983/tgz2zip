@@ -13,10 +13,21 @@ check_errs() {
 normalize() {
 	dir=$1
 	dir=`dirname $dir`
-	dir=`cd "${dir}";pwd`
 	fname=`basename $1`
 	echo "$dir/$fname"
 }
+
+while getopts :h OPTION
+do
+         case $OPTION in
+          h) echo "tgz2zip wonderland.tgz [middle-earth.tar.bzip2]" >&2
+             exit 0
+             ;;
+          \?) echo "Illegal option -- $OPTARG" >&2
+             exit -1
+            ;;
+         esac
+done
 
 for infile in "$@"
 do
@@ -32,17 +43,17 @@ do
 		*.tar.gz)
 			tar -C "$unpackdir" -xzf "$infile" >/dev/null
 			check_errs $?
-			outfile= ${infile:%.tar.gz}
+			outfile= ${infile%.tar.gz}
 			;;
 	    *.tar)
 	        tar -C "$unpackdir" -xf "$infile" >/dev/null
 			check_errs $?
-			outfile=${infile:.tar}
+			outfile=${infile%.tar}
 	        ;;
 	    *.tar.bzip2)
 	        tar -C "$unpackdir" -xjf "$infile" >/dev/null 
 			check_errs $?
-			outfile= ${infile:.tar.bzip2}
+			outfile= ${infile%.tar.bzip2}
 	        ;;
 	    *)
 	        echo "Unrecognized input format" >&2
