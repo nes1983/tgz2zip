@@ -3,7 +3,7 @@ require 'formula'
 class Tgz2zip < Formula
     url 'https://github.com/nes1983/tgz2zip/zipball/master'
     homepage 'http://github.com/nes1983/tgz2zip/'
-    md5 'bd89fbcd86eb64c343d00d05bf76ac12'
+    #md5 'bd89fbcd86eb64c343d00d05bf76ac12'
     version '0.1'
     depends_on 'ronn' => :ruby
 
