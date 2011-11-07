@@ -1,14 +1,14 @@
 require 'formula'
-require 'install'
 
 class Tgz2zip < Formula
 	url 'https://github.com/nes1983/tgz2zip/zipball/master'
 	homepage 'http://github.com/nes1983/tgz2zip/'
-	#md5 '829a2db4700c4c5ae549b0133a1d0d48'
-	version '0.1'
+	md5 '0e45df22e962af1bcc80bf95610fca5b'
+    version '0.1'
 	depends_on 'ronn' => :ruby
 
 	def install
+	        require "install.rb"
 			install_tgz2zip(prefix)
 	end
 
