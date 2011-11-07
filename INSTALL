@@ -5,4 +5,10 @@ To install, run
 
 	ruby install.rb [prefix]
 
-Where prefix is the place where you want it installed, defaulting to "/". 
+Here, `prefix` is the place where you want it installed, defaulting to "`/`". 
+
+If you're on OSX, just type
+
+	brew install tgz2zip
+	
+This will install tgz2zip via homebrew. (The homebrew recipe is in `tgz2zip.rb`.)
