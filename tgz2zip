@@ -44,7 +44,7 @@ fi
 
 for infile in "$@"
 do
-    unpackdir="$(mktemp -d -t 2zip)"
+    unpackdir="$(mktemp -d -t 2zip.XXXXXX)"
     trap "rm -rf '$unpackdir'" EXIT INT HUP TERM
 
     case "$infile" in
