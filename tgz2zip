@@ -79,6 +79,7 @@ do
 
     if [ -e $outfile ] ; then
         echo "Overwriting $outfile" >&2
+        rm "$outfile"
     fi
     
     pushd "$unpackdir" > /dev/null
