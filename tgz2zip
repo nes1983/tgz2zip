@@ -26,15 +26,11 @@ myhelp() {
     exit 0
 }
 
-case "$#" in (0)
+case "${1:--h}" in (-h)
     myhelp
-;;(*)
-    case "$1" in (-h)
-        myhelp
-    ;;(-?*)
-        echo "Illegal option -- ${1#?}" >&2
-        exit -1
-    ;;esac
+;;(-?*)
+    echo "Illegal option -- ${1#?}" >&2
+    exit -1
 ;;esac
 
 for infile in "$@"
