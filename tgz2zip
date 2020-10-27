@@ -4,9 +4,9 @@
 # Parameter 1 is the return code
 # Para. 2 is text to display on failure.
 check_errs() {
-  case "${1}" in ("0") :;; (*)
-    echo "ERROR # ${1} : ${2}"
-    exit ${1}
+  case "$1" in ([!0]*)
+    echo "ERROR # $1 : $2"
+    exit $1
   esac
 }
 
@@ -26,20 +26,16 @@ myhelp() {
     exit 0
 }
 
-while getopts :h OPTION
-do
-    case $OPTION in
-        (h) myhelp
-            ;;
-        (\?)echo "Illegal option -- $OPTARG" >&2
-            exit -1
-            ;;
-    esac
-done
-
-case "$1" in ("")
+case "$#" in (0)
     myhelp
-esac
+;;(*)
+    case "$1" in (-h)
+        myhelp
+    ;;(-?*)
+        echo "Illegal option -- ${1#?}" >&2
+        exit -1
+    ;;esac
+;;esac
 
 for infile in "$@"
 do
